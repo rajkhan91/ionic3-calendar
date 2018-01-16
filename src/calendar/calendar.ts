@@ -50,13 +50,12 @@ export class Calendar {
 
     displayMonth: number;
 
-    dateArray: Array<dateObj> = []; // 本月展示的所有天的数组
+    dateArray: Array<dateObj> = [];
 
-    weekArray = [];// 保存日历每行的数组
+    weekArray = [];
 
-    lastSelect: number = 0; // 记录上次点击的位置
+    lastSelect: number = 0;
 
-    // weekHead: string[] = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
     weekHead: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 
@@ -71,13 +70,11 @@ export class Calendar {
         this.today()
     }
 
-    // 跳转至今天
     today() {
         this.displayYear = this.currentYear;
         this.displayMonth = this.currentMonth;
         this.createMonth(this.currentYear, this.currentMonth);
-
-        // 将今天标记为选择状态
+      
         let todayIndex = _.findIndex(this.dateArray, {
             year: this.currentYear,
             month: this.currentMonth,
@@ -91,26 +88,26 @@ export class Calendar {
     }
 
     createMonth(year: number, month: number) {
-        this.dateArray = [];// 清除上个月的数据
-        this.weekArray = [];// 清除数据
-        let firstDay;//当前选择月份的 1 号星期几,决定了上个月取出几天出来。星期日不用显示上个月，星期一显示上个月一天，星期二显示上个月两天
-        let preMonthDays;// 上个月的天数
-        let monthDays;// 当月的天数
+        this.dateArray = [];
+        this.weekArray = [];
+        let firstDay;
+        let preMonthDays;
+        let monthDays;
         let weekDays: Array<dateObj> = [];
 
         firstDay = moment({ year: year, month: month, date: 1 }).day();
-        // 上个月天数
+      
         if (month === 0) {
             preMonthDays = moment({ year: year - 1, month: 11 }).daysInMonth();
         } else {
             preMonthDays = moment({ year: year, month: month - 1 }).daysInMonth();
         }
-        // 本月天数
+        
         monthDays = moment({ year: year, month: month }).daysInMonth();
 
-        // 将上个月的最后几天添加入数组
-        if (firstDay !== 7) { //星期日不用显示上个月
-            let lastMonthStart = preMonthDays - firstDay + 1;// 从上个月几号开始
+        
+        if (firstDay !== 7) { 
+            let lastMonthStart = preMonthDays - firstDay + 1;
             for (let i = 0; i < firstDay; i++) {
                 if (month === 0) {
                     this.dateArray.push({
@@ -134,8 +131,7 @@ export class Calendar {
 
             }
         }
-
-        // 将本月天数添加到数组中
+        
         for (let i = 0; i < monthDays; i++) {
             this.dateArray.push({
                 year: year,
@@ -156,8 +152,7 @@ export class Calendar {
             })
             this.dateArray[todayIndex].isToday = true;
         }
-
-        // 将下个月天数添加到数组中，有些月份显示 6 周，有些月份显示 5 周
+       
         if (this.dateArray.length % 7 !== 0) {
             let nextMonthAdd = 7 - this.dateArray.length % 7
             for (let i = 0; i < nextMonthAdd; i++) {
@@ -183,10 +178,7 @@ export class Calendar {
 
             }
         }
-
-        // 至此所有日期数据都被添加入 dateArray 数组中
-
-        // 将日期数据按照每 7 天插入新的数组中
+       
         for (let i = 0; i < this.dateArray.length / 7; i++) {
             for (let j = 0; j < 7; j++) {
                 weekDays.push(this.dateArray[i * 7 + j]);
@@ -196,8 +188,7 @@ export class Calendar {
         }
     }
 
-    back() {
-        // 处理跨年的问题
+    back() {        
         if (this.displayMonth === 0) {
             this.displayYear--;
             this.displayMonth = 11;
@@ -207,8 +198,7 @@ export class Calendar {
         this.createMonth(this.displayYear, this.displayMonth);
     }
 
-    forward() {
-        // 处理跨年的问题
+    forward() {        
         if (this.displayMonth === 11) {
             this.displayYear++;
             this.displayMonth = 0;
@@ -217,12 +207,11 @@ export class Calendar {
         }
         this.createMonth(this.displayYear, this.displayMonth);
     }
-
-    // 选择某日期，点击事件
+    
     daySelect(day, i, j) {
-        // 首先将上次点击的状态清除
+        
         this.dateArray[this.lastSelect].isSelect = false;
-        // 保存本次点击的项
+        
         this.lastSelect = i * 7 + j;
         this.dateArray[i * 7 + j].isSelect = true;
 
@@ -230,12 +219,11 @@ export class Calendar {
     }
 }
 
-// 日历的每个格子
 interface dateObj {
     year: number,
     month: number,
-    date: number,//几号
-    isThisMonth: boolean,//是否为当前选择的月份
+    date: number,
+    isThisMonth: boolean,
     isToday?: boolean,
     isSelect?: boolean,
 }
