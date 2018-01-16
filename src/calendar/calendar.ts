@@ -7,13 +7,13 @@ import * as _ from "lodash";
     template: `
     <ion-grid>
         <ion-row justify-content-center>
-            <ion-col col-auto (click)="back()">
+            <ion-col col-2 col-auto (click)="back()" text-left>
                 <ion-icon ios="ios-arrow-back" md="md-arrow-back"></ion-icon>
             </ion-col>
-            <ion-col col-auto>
-                <div>{{displayYear}} {{displayMonth + 1}} </div>
+            <ion-col col-8 col-auto text-center>
+                <div> {{displayMonth + 1}} {{displayYear}}</div>
             </ion-col>
-            <ion-col col-auto (click)="forward()">
+            <ion-col col-2 col-auto (click)="forward()" text-right>
                 <ion-icon ios="ios-arrow-forward" md="md-arrow-forward"></ion-icon>
             </ion-col>
         </ion-row>
@@ -50,12 +50,12 @@ export class Calendar {
 
     displayMonth: number;
 
-    dateArray: Array<dateObj> = [];
+    dateArray: Array<dateObj> = []; 
 
     weekArray = [];
 
-    lastSelect: number = 0;
-
+    lastSelect: number = 0; 
+    
     weekHead: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 
@@ -74,7 +74,8 @@ export class Calendar {
         this.displayYear = this.currentYear;
         this.displayMonth = this.currentMonth;
         this.createMonth(this.currentYear, this.currentMonth);
-      
+
+       
         let todayIndex = _.findIndex(this.dateArray, {
             year: this.currentYear,
             month: this.currentMonth,
@@ -96,7 +97,7 @@ export class Calendar {
         let weekDays: Array<dateObj> = [];
 
         firstDay = moment({ year: year, month: month, date: 1 }).day();
-      
+       
         if (month === 0) {
             preMonthDays = moment({ year: year - 1, month: 11 }).daysInMonth();
         } else {
@@ -106,7 +107,7 @@ export class Calendar {
         monthDays = moment({ year: year, month: month }).daysInMonth();
 
         
-        if (firstDay !== 7) { 
+        if (firstDay !== 7) {
             let lastMonthStart = preMonthDays - firstDay + 1;
             for (let i = 0; i < firstDay; i++) {
                 if (month === 0) {
@@ -131,6 +132,7 @@ export class Calendar {
 
             }
         }
+
         
         for (let i = 0; i < monthDays; i++) {
             this.dateArray.push({
@@ -152,6 +154,7 @@ export class Calendar {
             })
             this.dateArray[todayIndex].isToday = true;
         }
+
        
         if (this.dateArray.length % 7 !== 0) {
             let nextMonthAdd = 7 - this.dateArray.length % 7
@@ -178,7 +181,8 @@ export class Calendar {
 
             }
         }
-       
+
+        
         for (let i = 0; i < this.dateArray.length / 7; i++) {
             for (let j = 0; j < 7; j++) {
                 weekDays.push(this.dateArray[i * 7 + j]);
@@ -188,7 +192,8 @@ export class Calendar {
         }
     }
 
-    back() {        
+    back() {
+        
         if (this.displayMonth === 0) {
             this.displayYear--;
             this.displayMonth = 11;
@@ -198,7 +203,8 @@ export class Calendar {
         this.createMonth(this.displayYear, this.displayMonth);
     }
 
-    forward() {        
+    forward() {
+      
         if (this.displayMonth === 11) {
             this.displayYear++;
             this.displayMonth = 0;
@@ -207,11 +213,11 @@ export class Calendar {
         }
         this.createMonth(this.displayYear, this.displayMonth);
     }
-    
+
+   
     daySelect(day, i, j) {
-        
-        this.dateArray[this.lastSelect].isSelect = false;
-        
+       this.dateArray[this.lastSelect].isSelect = false;
+       
         this.lastSelect = i * 7 + j;
         this.dateArray[i * 7 + j].isSelect = true;
 
